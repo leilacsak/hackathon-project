@@ -1,54 +1,70 @@
-// Global configuration values for the game
+// Centralized game settings for easy tuning
 const CONFIG = {
-    GRID_SIZE: 12,          // Number of rows and columns (12x12 grid)
-    DEFAULT_LENGTH: 8,      // Default length of the path to memorize
-    DISPLAY_TIME: 2000,     // How long the path is shown (in milliseconds)
-    CELL_COUNT: 144         // Total number of tiles (12 * 12)
+    GRID_SIZE: 12,          // Number of cells per row/column (12x12 grid)
+    DEFAULT_LENGTH: 8,      // Default length of the generated path
+    DISPLAY_TIME: 2000,     // Time (ms) the full path remains visible
+    CELL_COUNT: 144         // Total number of cells (GRID_SIZE * GRID_SIZE)
 };
 
-// DOM elements
+// ===============================
+// DOM element references
+// ===============================
 const grid = document.getElementById('grid');
 const startBtn = document.getElementById('start-btn');
 const statusMsg = document.getElementById('status-message');
 
+// ===============================
 // Game state variables
-let gamePath = [];         // The randomly generated correct path
-let userPath = [];         // The path entered by the user
-let tiles = [];            // Array holding all tile elements
-let isShowingPath = false; // Prevents clicking while the path is displayed
+// ===============================
+let gamePath = [];          // Stores the correct path the user must memorize
+let userPath = [];          // Stores the user's input path
+let tiles = [];             // Holds references to all grid tiles
+let isShowingPath = false;  // True while the path animation is playing
+let isInputEnabled = false; // Controls when user clicks are allowed
 
-// Creates the grid and initializes each tile
+// ===============================
+// Grid creation
+// ===============================
 function createGrid() {
-    grid.innerHTML = '';   // Clear any existing tiles
-    tiles = [];            // Reset tile array
+    // Clear any existing grid content
+    grid.innerHTML = '';
+    tiles = [];
 
+    // Create each tile dynamically
     for (let i = 0; i < CONFIG.CELL_COUNT; i++) {
         const tile = document.createElement('div');
-        tile.classList.add('tile');   // Apply tile styling
-        tile.dataset.index = i;       // Store tile index for reference
+        tile.classList.add('tile');
 
-        // Handle user clicking a tile
+        // Store tile index for reference
+        tile.dataset.index = i;
+
+        // Attach click handler for user interaction
         tile.addEventListener('click', () => handleTileClick(i));
 
+        // Add tile to the grid and local array
         grid.appendChild(tile);
         tiles.push(tile);
     }
 }
 
-// Generates a random valid path through neighboring tiles
+// ===============================
+// Path generation logic
+// ===============================
 function generatePath(length = CONFIG.DEFAULT_LENGTH) {
     const path = [];
 
-    // Choose a random starting tile
+    // Start from a random cell within the grid
     let current = Math.floor(Math.random() * CONFIG.CELL_COUNT);
     path.push(current);
 
-    // Continue adding neighboring tiles until path reaches desired length
+    // Continue until desired path length is reached
     while (path.length < length) {
+        // Get all valid adjacent cells
         const neighbors = getValidNeighbors(current);
 
-        // Randomly select a valid neighbor
+        // Randomly select one neighboring cell
         const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+
         path.push(next);
         current = next;
     }
@@ -56,82 +72,101 @@ function generatePath(length = CONFIG.DEFAULT_LENGTH) {
     return path;
 }
 
-// Returns valid neighboring tile indices (up, down, left, right)
+// Returns valid neighboring cells (up, down, left, right)
 function getValidNeighbors(index) {
     const neighbors = [];
+
+    // Convert linear index into row/column coordinates
     const row = Math.floor(index / CONFIG.GRID_SIZE);
     const col = index % CONFIG.GRID_SIZE;
 
-    // Check each direction while staying inside the grid
-    if (row > 0) neighbors.push(index - CONFIG.GRID_SIZE);                 // Up
+    // Check boundaries before adding neighbors
+    if (row > 0) neighbors.push(index - CONFIG.GRID_SIZE);               // Up
     if (row < CONFIG.GRID_SIZE - 1) neighbors.push(index + CONFIG.GRID_SIZE); // Down
-    if (col > 0) neighbors.push(index - 1);                                // Left
-    if (col < CONFIG.GRID_SIZE - 1) neighbors.push(index + 1);             // Right
+    if (col > 0) neighbors.push(index - 1);                              // Left
+    if (col < CONFIG.GRID_SIZE - 1) neighbors.push(index + 1);           // Right
 
     return neighbors;
 }
 
-// Starts a new game round
+// ===============================
+// Game start logic
+// ===============================
 async function startGame() {
-    userPath = [];   // Reset user input
+    // Reset user progress
+    userPath = [];
 
-    // Remove any previous visual indicators
+    // Clear any previous visual states
     tiles.forEach(t => t.classList.remove('active', 'wrong'));
 
-    // Generate a new path (use input length or default)
-    gamePath = generatePath(
-        parseInt(document.getElementById('length').value) || CONFIG.DEFAULT_LENGTH
-    );
+    // Get desired path length from user input (fallback to default)
+    const lengthInput = document.getElementById('length').value;
+    gamePath = generatePath(parseInt(lengthInput) || CONFIG.DEFAULT_LENGTH);
 
-    // Display the full path to the player
-    await showPathAllAtOnce();
+    // Show the generated path to the user
+    await showPathToMemorise();
 }
 
-// Shows the entire path at once for memorization
-async function showPathAllAtOnce() {
+// ===============================
+// Path display animation
+// ===============================
+async function showPathToMemorise() {
     isShowingPath = true;
-    statusMsg.innerText = "Memorize the path!";
+    isInputEnabled = false; // Prevent user input during animation
+    statusMsg.innerText = "Memorize the sequence...";
 
-    // Highlight all tiles in the path
-    gamePath.forEach(index => tiles[index].classList.add('active'));
+    // Highlight each tile in sequence with a staggered delay
+    for (let i = 0; i < gamePath.length; i++) {
+        setTimeout(() => {
+            tiles[gamePath[i]].classList.add('active');
+        }, i * 100);
+    }
 
-    // Wait for the display duration
-    await new Promise(r => setTimeout(r, CONFIG.DISPLAY_TIME));
+    // Total time = animation duration + fixed display time
+    const totalWaitTime = (gamePath.length * 100) + CONFIG.DISPLAY_TIME;
 
-    // Remove highlights
+    // Pause execution until the path display finishes
+    await new Promise(resolve => setTimeout(resolve, totalWaitTime));
+
+    // Remove all highlights after display ends
     gamePath.forEach(index => tiles[index].classList.remove('active'));
 
+    // Enable user interaction
     isShowingPath = false;
+    isInputEnabled = true;
     statusMsg.innerText = "Your turn! Replicate the sequence.";
 }
 
-// Handles user clicking a tile
+// ===============================
+// User input handling
+// ===============================
 function handleTileClick(index) {
-    // Ignore clicks while showing path or if no game is active
-    if (isShowingPath || gamePath.length === 0) return;
+    // Ignore clicks if input is disabled or path is still showing
+    if (!isInputEnabled || isShowingPath) return;
 
-    // Determine the expected next tile in the sequence
+    // Determine the expected tile for the current step
     const expectedIndex = gamePath[userPath.length];
 
     if (index === expectedIndex) {
-        // Correct tile clicked
+        // Correct selection
         tiles[index].classList.add('active');
         userPath.push(index);
 
-        // Check if the full path has been successfully completed
+        // Check if user has completed the entire sequence
         if (userPath.length === gamePath.length) {
-            statusMsg.innerText = "Success! Path completed.";
+            statusMsg.innerText = "Perfect! Level Complete.";
+            isInputEnabled = false;
         }
     } else {
-        // Incorrect tile clicked
+        // Incorrect selection
         tiles[index].classList.add('wrong');
-        statusMsg.innerText = "Incorrect sequence. Try again!";
-        gamePath = []; // End the current game
+        statusMsg.innerText = "Incorrect! Press Start to try again.";
+        isInputEnabled = false;
     }
 }
 
-// Start button event listener
+// ===============================
+// Initialization
+// ===============================
 startBtn.addEventListener('click', startGame);
-
-// Initialize the grid on page load
 createGrid();

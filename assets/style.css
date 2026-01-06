@@ -63,8 +63,17 @@ h1 {
 
 /* Tile lights up when part of the shown path or correct click */
 .tile.active {
-  background-color: var(--highlight-color);
-  box-shadow: 0 0 15px var(--highlight-color);
+    background-color: var(--highlight-color);
+    box-shadow: 0 0 15px var(--highlight-color);
+    transform: scale(0.95);
+    transition: all 0.2s ease-in;
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 
 /* Tile turns red when clicked incorrectly */
