@@ -2,19 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Ensures proper scaling on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Path Memory Game - 12x12</title>
+
+    <!-- Link to external CSS file -->
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
+    <!-- Main title -->
     <h1>Memory Path</h1>
     <p>Watch the path, then repeat the sequence.</p>
 
     <div class="game-container">
+        
+        <!-- The 12x12 grid will be generated here by JavaScript -->
         <div id="grid"></div>
 
+        <!-- Right-side control panel -->
         <div class="controls">
+
+            <!-- Game mode selection -->
             <div class="setting-group">
                 <label for="mode">Game Mode</label>
                 <select id="mode">
@@ -23,18 +33,22 @@
                 </select>
             </div>
             
+            <!-- Slider to choose path length -->
             <div class="setting-group">
                 <label>Path Length: <span id="diff-val">8</span> steps</label>
                 <input type="range" id="length" min="3" max="25" value="8">
             </div>
 
+            <!-- Start button -->
             <button id="start-btn">Start Game</button>
             
+            <!-- Status messages (e.g., "Your turn!", "Game Over") -->
             <div id="status-message" style="margin-top: 20px; text-align: center; color: var(--highlight-color);">
-                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Link to JavaScript logic -->
     <script src="assets/script.js"></script>
 </body>
 </html>

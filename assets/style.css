@@ -1,3 +1,4 @@
+/* Color theme variables */
 :root {
     --bg-color: #1a1a2e;
     --tile-color: #16213e;
@@ -7,6 +8,7 @@
     --panel-bg: #0f3460;
 }
 
+/* Global page styling */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg-color);
@@ -22,15 +24,17 @@ h1 {
     margin-bottom: 5px;
 }
 
+/* Layout wrapper for grid + control panel */
 .game-container {
     display: flex;
     gap: 30px;
     margin-top: 20px;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allows stacking on small screens */
     justify-content: center;
     max-width: 1200px;
 }
 
+/* 12x12 grid container */
 #grid {
     display: grid;
     grid-template-columns: repeat(12, 40px);
@@ -42,6 +46,7 @@ h1 {
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
+/* Individual grid tiles */
 .tile {
     width: 40px;
     height: 40px;
@@ -51,19 +56,23 @@ h1 {
     transition: background-color 0.2s, transform 0.1s;
 }
 
+/* Hover effect for tiles */
 .tile:hover {
     background-color: #24345d;
 }
 
+/* Tile lights up when part of the shown path or correct click */
 .tile.active {
     background-color: var(--highlight-color);
     box-shadow: 0 0 15px var(--highlight-color);
 }
 
+/* Tile turns red when clicked incorrectly */
 .tile.wrong {
     background-color: var(--error-color);
 }
 
+/* Right-side control panel */
 .controls {
     background: var(--panel-bg);
     padding: 25px;
@@ -72,10 +81,12 @@ h1 {
     height: fit-content;
 }
 
+/* Spacing for each setting group */
 .setting-group {
     margin-bottom: 20px;
 }
 
+/* Label styling */
 label {
     display: block;
     margin-bottom: 8px;
@@ -83,11 +94,13 @@ label {
     color: #999;
 }
 
+/* Dropdown and slider styling */
 select, input[type="range"] {
     width: 100%;
     margin-top: 5px;
 }
 
+/* Start button styling */
 button {
     width: 100%;
     padding: 12px;
@@ -101,11 +114,13 @@ button {
     transition: transform 0.2s;
 }
 
+/* Button hover animation */
 button:hover {
     transform: translateY(-2px);
     filter: brightness(1.1);
 }
 
+/* Button press animation */
 button:active {
     transform: translateY(0);
 }
