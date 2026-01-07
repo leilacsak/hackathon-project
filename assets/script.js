@@ -61,31 +61,52 @@ function createGrid() {
 // Path generation logic
 // ===============================
 function generatePath(length = CONFIG.DEFAULT_LENGTH) {
-  const path = [];
+  // Build a non-overlapping path; if stuck, retry
+  const maxAttempts = 100;
+  let attempts = 0;
 
-  // Start from a specific cell (or randomized)
-  // 137 is row 11, col 5 in a 12x12 grid
-  let current = 137; 
-  path.push(current);
+  while (attempts < maxAttempts) {
+    console.log("attempt");
+    attempts++;
+    const path = [];
+    const visited = new Set();
 
-  // Continue until desired path length is reached
-  while (path.length < length) {
-    // Get all valid adjacent cells
-    const neighbors = getValidNeighbors(current);
+    // Start from a specific cell (or randomized)
+    // 137 is row 11, col 5 in a 12x12 grid
+    let current = 137;
+    path.push(current);
+    visited.add(current);
 
-    // Randomly select one neighboring cell
-    // Improvement: Simple check to prevent immediate backtracking could go here
-    const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+    // Continue until required path length is reached
+    while (path.length < length) {
+      // Get valid neighbors that haven't been visited
+      const neighbors = getValidNeighbors(current, visited);
 
-    path.push(next);
-    current = next;
+      // If there are no available neighbors, this path is stuck — break and retry
+      if (neighbors.length === 0) break;
+
+      // Randomly select one neighboring cell
+      const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+
+      path.push(next);
+      visited.add(next);
+      current = next;
+    }
+
+    // If we built a full-length path, return it
+    if (path.length === length) return path;
+
+    // Otherwise try again
+    // (loop will retry up to maxAttempts)
   }
-
-  return path;
+  // Alert the user if no path could be generated in the max attempts
+  alert("Error, try starting the game again.");
+  attempts = 0;
 }
 
 // Returns valid neighboring cells (up, down, left, right)
-function getValidNeighbors(index) {
+// If `visited` is provided, neighbors that are already visited will be excluded.
+function getValidNeighbors(index, visited = new Set()) {
   const neighbors = [];
 
   // Convert linear index into row/column coordinates
@@ -98,7 +119,14 @@ function getValidNeighbors(index) {
   if (col > 0) neighbors.push(index - 1); // Left
   if (col < CONFIG.GRID_SIZE - 1) neighbors.push(index + 1); // Right
 
-  return neighbors;
+  const filteredNeighbors = [];
+  for (let i = 0; i < neighbors.length; i++) {
+    const n = neighbors[i];
+    // Exclude neighbors already visited in the current path generation
+    if (!visited.has(n)) filteredNeighbors.push(n);
+  }
+
+  return filteredNeighbors;
 }
 
 // ===============================
@@ -125,7 +153,7 @@ function stopTimer() {
 // ===============================
 async function startGame() {
   // Prevent starting if animation is currently playing
-  if(isShowingPath) return;
+  if (isShowingPath) return;
 
   // Reset user progress and timer
   stopTimer();
@@ -155,10 +183,12 @@ async function showPathToMemorise() {
   // Highlight each tile in sequence with a staggered delay
   for (let i = 0; i < gamePath.length; i++) {
     // Using promise to wait for animation timing
-    await new Promise(resolve => setTimeout(() => {
+    await new Promise((resolve) =>
+      setTimeout(() => {
         tiles[gamePath[i]].classList.add("active");
         resolve();
-    }, 200)); // Adjusted speed slightly for better visibility
+      }, 200)
+    ); // Adjusted speed slightly for better visibility
   }
 
   // Allow path to remain visible for the configured time
@@ -236,8 +266,8 @@ window.onclick = (event) => {
 };
 
 // Update the path length number when slider moves
-lengthInput.addEventListener('input', (e) => {
-    diffVal.textContent = e.target.value;
+lengthInput.addEventListener("input", (e) => {
+  diffVal.textContent = e.target.value;
 });
 
 // ===============================
