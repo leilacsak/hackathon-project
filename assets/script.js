@@ -4,6 +4,7 @@ const CONFIG = {
   DEFAULT_LENGTH: 8, // Default length of the generated path
   DISPLAY_TIME: 2000, // Time (ms) the full path remains visible
   CELL_COUNT: 144, // Total number of cells (GRID_SIZE * GRID_SIZE)
+  TIME_PER_STEP: 2 // Seconds per tile in timed mode
 };
 
 // ===============================
@@ -18,6 +19,8 @@ const instBtn = document.getElementById("instructions-btn");
 const closeBtn = document.querySelector(".close-btn");
 const lengthInput = document.getElementById("length");
 const diffVal = document.getElementById("diff-val");
+const timedModeToggle = document.getElementById("timed-mode");
+const timerDisplay = document.getElementById("timer-display");
 
 // ===============================
 // Game state variables
@@ -30,7 +33,9 @@ let isPlayerTurn = false; // True when it is specifically the user's turn to pla
 
 // Timer variables
 let secondsElapsed = 0;
+let timeRemaining = 0;
 let timerInterval = null;
+let isTimedMode = false;
 
 // ===============================
 // Grid creation
@@ -104,20 +109,44 @@ function getValidNeighbors(index) {
 // ===============================
 // Timer Logic
 // ===============================
-function startTimer() {
+function startTimer(duration=0) {
   stopTimer(); // Ensure no duplicate timers
-  secondsElapsed = 0;
-  timerInterval = setInterval(() => {
-    secondsElapsed++;
-    // Optional: Update a UI timer element here if desired
-  }, 1000);
+
+  if(isTimedMode) {
+    timeRemaining = duration;
+    timerDisplay.innerText = `Time Left: ${timeRemaining}s`; // Time is visible immediately
+
+    timerInterval = setInterval(() => {
+      timeRemaining--;
+      timerDisplay.innerText = `Time Left: ${timeRemaining}s`; // Update display each second
+
+      if (timeRemaining <= 0) {
+        handleTimeout();
+      } 
+    }, 1000);
+    } else {
+        timerDisplay.innerText = ""; // Hide countdown when not timed
+        secondsElapsed = 0;
+        timerInterval = setInterval(() => {
+        secondsElapsed++;
+        // Optional: Update a UI timer element here if desired
+     }, 1000);
+    }
 }
 
-function stopTimer() {
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-  }
+    function stopTimer() {
+        if (timerInterval) {
+         clearInterval(timerInterval);
+            timerInterval = null;
+        }
+         timerDisplay.innerText = ""; // Clears old "Time Left" immediately from previous game
+}
+
+function handleTimeout() {
+  stopTimer();
+  isPlayerTurn = false;
+  statusMsg.innerText = "Time's up! Attempt failed.";
+  grid.classList.add("disabled");
 }
 
 // ===============================
@@ -131,14 +160,16 @@ async function startGame() {
   stopTimer();
   userPath = [];
   isPlayerTurn = false;
-  grid.classList.remove("disabled"); // Ensure grid is clickable
-
+  isTimedMode = timedModeToggle.checked;
+  
   // Clear any previous visual states
   tiles.forEach((t) => t.classList.remove("active", "wrong"));
 
+  grid.classList.remove("disabled"); // Ensure grid is clickable
+
   // Get desired path length from user input (fallback to default)
-  const len = parseInt(lengthInput.value) || CONFIG.DEFAULT_LENGTH;
-  gamePath = generatePath(len);
+  const length = parseInt(lengthInput.value) || CONFIG.DEFAULT_LENGTH;
+  gamePath = generatePath(length);
 
   // Show the generated path to the user
   await showPathToMemorise();
@@ -171,7 +202,12 @@ async function showPathToMemorise() {
   isShowingPath = false;
   isPlayerTurn = true;
   statusMsg.innerText = "Your turn! Time is ticking...";
+
+  if (isTimedMode) {
+    startTimer(gamePath.length * CONFIG.TIME_PER_STEP); // countdown based on path length
+    } else {
   startTimer();
+}
 }
 
 // ===============================
@@ -192,9 +228,15 @@ function handleTileClick(index) {
     // Check if user has completed the entire sequence
     if (userPath.length === gamePath.length) {
       stopTimer();
-      statusMsg.innerText = `Perfect! Finished in ${secondsElapsed} seconds.`;
       isPlayerTurn = false;
       // Optional: grid.classList.add("disabled");
+
+      // Show different messages depending on mode
+      if (isTimedMode) {
+        statusMsg.innerText = `Success! You finished with ${timeRemaining} seconds remaining!`;
+      } else {
+        statusMsg.innerText = `Perfect! Finished in ${secondsElapsed} seconds.`;
+        }
     }
   } else {
     // Incorrect selection
@@ -222,10 +264,13 @@ function resetAttempt() {
   // Clear visual trail and errors
   tiles.forEach((t) => t.classList.remove("active", "wrong"));
 
+  if (isTimedMode) {
+    startTimer(gamePath.length * CONFIG.TIME_PER_STEP);
+    } else {
   // Restart the timer for the new attempt
   startTimer();
 }
-
+}
 // ===============================
 // Modal Logic & UI Listeners
 // ===============================
