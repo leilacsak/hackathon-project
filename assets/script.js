@@ -1,3 +1,5 @@
+/* jshint esversion: 8 */
+
 const CONFIG = {
     GRID_SIZE: 12,
     DEFAULT_LENGTH: 8,
@@ -28,6 +30,21 @@ let timeRemaining = 0;
 let timerInterval = null;
 let isTimedMode = false;
 
+/**
+ * Fixes the "Functions declared within loops" warning by 
+ * providing a static scope for the event listeners.
+ */
+function attachTileListeners(tile, index) {
+    tile.addEventListener("click", () => handleTileClick(index));
+
+    tile.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleTileClick(index);
+        }
+    });
+}
+
 function createGrid() {
     grid.innerHTML = "";
     tiles = [];
@@ -42,14 +59,7 @@ function createGrid() {
         tile.setAttribute("role", "button");
         tile.setAttribute("aria-label", `Tile ${i + 1}`);
 
-        tile.addEventListener("click", () => handleTileClick(i));
-
-        tile.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                handleTileClick(i);
-            }
-        });
+        attachTileListeners(tile, i);
 
         grid.appendChild(tile);
         tiles.push(tile);
@@ -72,7 +82,9 @@ function generatePath(length = CONFIG.DEFAULT_LENGTH) {
 
         while (path.length < length) {
             const neighbors = getValidNeighbors(current, visited);
-            if (neighbors.length === 0) break;
+            if (neighbors.length === 0) {
+                break;
+            }
 
             const next = neighbors[Math.floor(Math.random() * neighbors.length)];
             path.push(next);
@@ -80,7 +92,9 @@ function generatePath(length = CONFIG.DEFAULT_LENGTH) {
             current = next;
         }
 
-        if (path.length === length) return path;
+        if (path.length === length) {
+            return path;
+        }
     }
     
     statusMsg.innerText = "Error generating path. Please try again.";
@@ -92,10 +106,18 @@ function getValidNeighbors(index, visited) {
     const row = Math.floor(index / CONFIG.GRID_SIZE);
     const col = index % CONFIG.GRID_SIZE;
 
-    if (row > 0) neighbors.push(index - CONFIG.GRID_SIZE);
-    if (row < CONFIG.GRID_SIZE - 1) neighbors.push(index + CONFIG.GRID_SIZE);
-    if (col > 0) neighbors.push(index - 1);
-    if (col < CONFIG.GRID_SIZE - 1) neighbors.push(index + 1);
+    if (row > 0) {
+        neighbors.push(index - CONFIG.GRID_SIZE);
+    }
+    if (row < CONFIG.GRID_SIZE - 1) {
+        neighbors.push(index + CONFIG.GRID_SIZE);
+    }
+    if (col > 0) {
+        neighbors.push(index - 1);
+    }
+    if (col < CONFIG.GRID_SIZE - 1) {
+        neighbors.push(index + 1);
+    }
 
     return neighbors.filter(n => !visited.has(n));
 }
@@ -125,7 +147,9 @@ function startTimer(duration) {
 }
 
 function stopTimer() {
-    if (timerInterval) clearInterval(timerInterval);
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
     timerInterval = null;
 }
 
@@ -136,17 +160,29 @@ function handleTimeout() {
     tiles.forEach(t => t.classList.add("disabled")); 
 }
 
+// Helper to avoid function declarations inside loops referencing outer variables
+function activateTile(index) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            tiles[index].classList.add("active");
+            resolve();
+        }, 200);
+    });
+}
+
 async function startGame() {
-    if (isShowingPath) return;
+    if (isShowingPath) {
+        return;
+    }
 
     stopTimer();
     userPath = [];
     isPlayerTurn = false;
     isTimedMode = timedModeToggle ? timedModeToggle.checked : false;
 
-    tiles.forEach(t => t.classList.remove("active", "wrong"));
+    tiles.forEach(t => t.classList.remove("active", "wrong", "disabled"));
     
-    const length = parseInt(lengthInput.value) || CONFIG.DEFAULT_LENGTH;
+    const length = parseInt(lengthInput.value, 10) || CONFIG.DEFAULT_LENGTH;
     gamePath = generatePath(length);
     
     if (gamePath.length > 0) {
@@ -158,16 +194,15 @@ async function showPathToMemorise() {
     isShowingPath = true;
     statusMsg.innerText = "Memorize the sequence...";
 
-    for (let i = 0; i < gamePath.length; i++) {
-        await new Promise(resolve => setTimeout(() => {
-            tiles[gamePath[i]].classList.add("active");
-            resolve();
-        }, 200));
+    for (const index of gamePath) {
+        await activateTile(index);
     }
 
     await new Promise(resolve => setTimeout(resolve, CONFIG.DISPLAY_TIME));
 
-    gamePath.forEach(index => tiles[index].classList.remove("active"));
+    for (const index of gamePath) {
+        tiles[index].classList.remove("active");
+    }
 
     isShowingPath = false;
     isPlayerTurn = true;
@@ -181,7 +216,9 @@ async function showPathToMemorise() {
 }
 
 function handleTileClick(index) {
-    if (!isPlayerTurn || isShowingPath) return;
+    if (!isPlayerTurn || isShowingPath) {
+        return;
+    }
 
     const expectedIndex = gamePath[userPath.length];
 
@@ -192,9 +229,9 @@ function handleTileClick(index) {
         if (userPath.length === gamePath.length) {
             stopTimer();
             isPlayerTurn = false;
-            statusMsg.innerText = isTimedMode 
-                ? `Success! ${timeRemaining}s remaining.` 
-                : `Success! Finished in ${secondsElapsed}s.`;
+            statusMsg.innerText = isTimedMode ?
+                `Success! ${timeRemaining}s remaining.` :
+                `Success! Finished in ${secondsElapsed}s.`;
         }
     } else {
         stopTimer();
@@ -205,13 +242,15 @@ function handleTileClick(index) {
 }
 
 function resetAttempt() {
-    if (gamePath.length === 0) return;
+    if (gamePath.length === 0) {
+        return;
+    }
 
     userPath = [];
     isPlayerTurn = true;
     statusMsg.innerText = "Attempt reset! Try again...";
 
-    tiles.forEach(t => t.classList.remove("active", "wrong"));
+    tiles.forEach(t => t.classList.remove("active", "wrong", "disabled"));
 
     if (isTimedMode) {
         startTimer(gamePath.length * CONFIG.TIME_PER_STEP);
@@ -220,17 +259,20 @@ function resetAttempt() {
     }
 }
 
-
 instBtn.onclick = () => {
     modal.style.display = "block";
     closeBtn.focus();
 };
+
 closeBtn.onclick = () => {
     modal.style.display = "none";
     instBtn.focus();
 };
+
 window.onclick = (e) => {
-    if (e.target == modal) modal.style.display = "none";
+    if (e.target === modal) {
+        modal.style.display = "none";
+    }
 };
 
 lengthInput.addEventListener("input", (e) => {
