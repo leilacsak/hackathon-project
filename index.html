@@ -1,76 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Mind Trail</title>
-
-  <link rel="stylesheet" href="assets/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mind Trail - A memory path game">
+    <title>Mind Trail</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <script src="https://kit.fontawesome.com/4c4ec3a892.js" crossorigin="anonymous"></script>
 </head>
-
 <body>
-  <header class="site-header">
-    <h1>Mind Trail</h1>
-  </header>
 
-  <main class="main-content">
-    <button id="instructions-btn" class="blue-btn">Instructions</button>
+    <header class="site-header">
+        <h1>Mind Trail</h1>
+    </header>
 
-    <p>Watch the path, then repeat the sequence.</p>
+    <main class="main-content">
+        <button id="instructions-btn" class="blue-btn" aria-label="Open game instructions">Instructions</button>
+        
+        <p>Watch the path, then repeat the sequence.</p>
 
-    <div class="game-area-wrapper">
-      <div id="grid"></div>
+        <div id="timer-display" aria-live="off"></div>
 
-      <div id="status-message">Press Start to begin</div>
-      <div id="timer-display"></div>
+        <div class="game-area-wrapper">
+            <div id="grid" role="grid" aria-label="Game Board"></div>
+
+            <div id="status-message" aria-live="polite">Press Start to begin</div>
+        </div>
+
+        <div class="bottom-controls">
+            <button id="start-btn" class="blue-btn">Start Game</button>
+            <button id="reset-btn" class="blue-btn">Reset Attempt</button>
+        </div>
+
+        <div class="settings-drawer">
+            <div class="setting-group">
+                <label for="length">Path Length: <span id="diff-val">8</span> steps</label>
+                <input type="range" id="length" min="3" max="25" value="8">
+            </div>
+
+            <div class="setting-group checkbox-group">
+                <span id="timer-label">Timed Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="timed-mode" aria-labelledby="timer-label">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p class="mb-1">Mind Trail</p>
+            <p class="github-icon mb-4">
+                <i class="fa-brands fa-github" aria-hidden="true"></i>
+            </p>
+
+            <div class="team-container">
+                <div class="team-member">
+                    <img src="assets/images/steffan.png" alt="Steffan" class="team-img">
+                    <a href="https://github.com/steff657" target="_blank">Steffan</a>
+                </div>
+
+                <div class="team-member">
+                    <img src="assets/images/hamza.png" alt="Hamza" class="team-img">
+                    <a href="https://github.com/hamza-m1" target="_blank">Hamza</a>
+                </div>
+
+                <div class="team-member">
+                    <img src="assets/images/leila.png" alt="Leila" class="team-img">
+                    <a href="https://github.com/leilacsak" target="_blank">Leila</a>
+                </div>
+
+                <div class="team-member">
+                    <img src="assets/images/josh.png" alt="Josh" class="team-img">
+                    <a href="https://github.com/jdbukis" target="_blank">Josh</a>
+                </div>
+
+                <div class="team-member">
+                    <img src="assets/images/michal.png" alt="Michal" class="team-img">
+                    <a href="https://github.com/gustlik1444-ux" target="_blank">Michal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="instructions-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <button class="close-btn" aria-label="Close instructions">&times;</button>
+            <h2 id="modal-title">How to Play</h2>
+            <ol>
+                <li>Click <strong>Start Game</strong> to begin.</li>
+                <li>Watch the path light up on the grid.</li>
+                <li>Repeat the sequence by clicking or selecting the tiles in order.</li>
+                <li>If you make a mistake, use <strong>Reset Attempt</strong>.</li>
+            </ol>
+        </div>
     </div>
-
-    <div class="bottom-controls">
-      <button id="start-btn" class="blue-btn">Start Game</button>
-      <button id="reset-btn" class="blue-btn">Reset Attempt</button>
-    </div>
-
-    <div class="settings-drawer">
-      <div class="setting-group">
-        <label>Path Length: <span id="diff-val">8</span> steps</label>
-        <input type="range" id="length" min="3" max="25" value="8" />
-      </div>
-
-      <div class="setting-group">
-        <span>Timed Mode</span>
-        <label class="switch">
-          <input type="checkbox" id="timed-mode">
-          <span class="slider round"></span>
-        </label>
-
-      </div>
-
-  </main>
-
-  <footer class="site-footer">
-    <p class="github-icon"><i class="fa-brands fa-github"></i></p>
-    <a href="https://github.com/steff657" target="_blank">Steffan</a>
-    <a href="https://github.com/hamza-m1" target="_blank">Hamza</a>
-    <a href="https://github.com/leilacsak" target="_blank">Leila</a>
-    <a href="https://github.com/jdbukis" target="_blank">Josh</a>
-    <a href="https://github.com/gustlik1444-ux" target="_blank">Michal</a>
-  </footer>
-
-  <div id="instructions-modal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn">&times;</span>
-      <h2>How to Play</h2>
-      <p>1. Click <strong>Start Game</strong> to begin.</p>
-      <p>2. Watch the path light up on the grid.</p>
-      <p>3. Repeat the sequence by clicking the tiles in order.</p>
-      <p>4. If you make a mistake, use <strong>Reset Attempt</strong>.</p>
-    </div>
-  </div>
-
-  <script src="https://kit.fontawesome.com/4c4ec3a892.js" crossorigin="anonymous"></script>
-  <script src="assets/script.js"></script>
+    
+    <script src="assets/script.js"></script>
 </body>
-
 </html>
