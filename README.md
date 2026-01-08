@@ -57,22 +57,54 @@ font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 **Core Features:**
 
 - A continuous path generated on the grid
+
+  ![screenshot showing a generated path on the game grid](assets/images/features/path-generation-feature.png)
+
 - The path is highlighted in sequence before the round begins and when it is the player's turn it disappears
+
+  ![screenshot showing that the path has disappeared when it's the player turn](assets/images/features/path-disappearing-feature.png)
+
 - Clear instructions on how to play the game
+
+  ![screenshot showing the instructions button and instructions pop up](assets/images/features/instructions-feature.png)
+
 - Player reproduce the path by selecting tiles
+
+  ![screenshot showing the player half way through tile selection](assets/images/features/player-selecting-tiles-feature.png)
+
 - Immediate success/failure feedback
+
+  ![screenshot showing failure feedback](assets/images/features/failure-feedback-feature.png)
+
+  ![screenshot showing success feedback](assets/images/features/success-feedback-feature.png)
+
 - Start and Reset buttons to control gameplay
+
+  ![screenshot showing the start game and reset buttons](assets/images/features/start+reset-button-feature.png)
+
 - Single‑page layout with accessible structure and footer
+
+  ![screenshot showing the single page and accessible layout](assets/images/features/single-page-layout-feature.png)
 
 **Enhanced Features:**
 
-- Difficulty levels
 - Optional timed mode with countdown
+
+  ![screenshot showing the timed game mode toggle](assets/images/features/timed-mode-toggle-feature.png)
+
+  ![screenshot showing the timed game mode countdown](assets/images/features/countdown-feature.png)
+
 - Clear UI indicators for the game
+
+  ![screenshot showing the timed game mode countdown](assets/images/features/clear-ui-feature.png)
+
 - Mobile‑friendly grid with reliable tap targets
+
+  ![screenshot showing the timed game mode countdown](assets/images/features/mobile-friendly-grid-feature.png)
 
 **Optional/ Future Features:**
 
+- Difficulty levels
 - Local high score storage
 - Toggles for sound / animations
 - Accessibility options: high‑contrast mode, keyboard navigation
