@@ -128,6 +128,10 @@ No critical, major, or minor browser compatibility issues were detected across t
 
 ![screenshot of CSS validation passing](assets/images/css-validation.png)
 
+**JS Validation:**
+
+![screenshot of CSS validation passing](assets/images/jshint.png)
+
 ## Bugs
 
 ## Deployment
@@ -199,6 +203,8 @@ If you want to download the project to your local machine:
   https://validator.w3.org/
 - **W3C CSS Validator**  
   https://jigsaw.w3.org/css-validator/
+  **JS Validator**
+  https://jshint.com/
 
 ### Development Environment
 
