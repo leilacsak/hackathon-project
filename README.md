@@ -6,7 +6,7 @@
 
 This project is a memory game where the player observes a highlighted path on a grid, memorises it, and then attempts to accurately reproduce the sequence. The game features adjustable path length settings, a timer to track completion speed, and an optional countdown toggle for time-limited challenges.
 
-(Add "Am I responsive?" screenshot here)
+![Am I Responsive Screenshot](assets/images/reponsive_test.webp)
 
 ## Design & Planning
 
@@ -222,8 +222,6 @@ If you want to download the project to your local machine:
 - **Browser Compatibility**  
   https://www.powermapper.com/
 
-
-  
 ### Typography
 
 - Fonts provided by **Google Fonts**  
