@@ -42,8 +42,9 @@ font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
 ### Colour Scheme
 
+
 | Purpose             | Colour Code | Preview                                                   |
-| ------------------- | ----------- | --------------------------------------------------------- |
+| --------------------- | ------------- | ----------------------------------------------------------- |
 | Background          | `#ffffff`   | ![#ffffff](https://singlecolorimage.com/get/ffffff/15x15) |
 | Tile Color          | `#f0f0f0`   | ![#f0f0f0](https://singlecolorimage.com/get/f0f0f0/15x15) |
 | Highlight (Correct) | `#4ecca3`   | ![#4ecca3](https://singlecolorimage.com/get/4ecca3/15x15) |
@@ -59,29 +60,23 @@ font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 - A continuous path generated on the grid
 
   ![screenshot showing a generated path on the game grid](assets/images/features/path-generation-feature.png)
-
 - The path is highlighted in sequence before the round begins and when it is the player's turn it disappears
 
   ![screenshot showing that the path has disappeared when it's the player turn](assets/images/features/path-disappearing-feature.png)
-
 - Clear instructions on how to play the game
 
   ![screenshot showing the instructions button and instructions pop up](assets/images/features/instructions-feature.png)
-
 - Player reproduce the path by selecting tiles
 
   ![screenshot showing the player half way through tile selection](assets/images/features/player-selecting-tiles-feature.png)
-
 - Immediate success/failure feedback
 
   ![screenshot showing failure feedback](assets/images/features/failure-feedback-feature.png)
 
   ![screenshot showing success feedback](assets/images/features/success-feedback-feature.png)
-
 - Start and Reset buttons to control gameplay
 
   ![screenshot showing the start game and reset buttons](assets/images/features/start+reset-button-feature.png)
-
 - Single‑page layout with accessible structure and footer
 
   ![screenshot showing the single page and accessible layout](assets/images/features/single-page-layout-feature.png)
@@ -93,11 +88,9 @@ font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   ![screenshot showing the timed game mode toggle](assets/images/features/timed-mode-toggle-feature.png)
 
   ![screenshot showing the timed game mode countdown](assets/images/features/countdown-feature.png)
-
 - Clear UI indicators for the game
 
   ![screenshot showing the timed game mode countdown](assets/images/features/clear-ui-feature.png)
-
 - Mobile‑friendly grid with reliable tap targets
 
   ![screenshot showing the timed game mode countdown](assets/images/features/mobile-friendly-grid-feature.png)
@@ -152,6 +145,14 @@ No critical, major, or minor browser compatibility issues were detected across t
 
 ### Manual Testing
 
+![screenshot of testing instruction modal](assets/images/manual%20testing/instruction%20test.png)
+
+![screenshot of testing the buttons](assets/images/manual%20testing/button%20test.gif)
+
+![screenshot of testing path script](assets/images/manual%20testing/full%20path%20test.gif)
+
+![screenshot of testing the timer script and button](assets/images/manual%20testing/timer%20test.gif)
+
 ### Code Validation
 
 **HTML Validation:**
@@ -164,11 +165,11 @@ No critical, major, or minor browser compatibility issues were detected across t
 
 **JS Validation:**
 
-![screenshot of CSS validation passing](assets/images/jshint.png)
+![screenshot of JS validation passing](assets/images/jshint.png)
 
 ## Bugs
 
-- **Countdown timer didn’t reset between games**  
+- **Countdown timer didn’t reset between games**
   Fixed by clearing the timer display when starting or stopping a game.
 
 - **Pathfinding occasionally produced overlapping paths**  
@@ -183,93 +184,101 @@ No critical, major, or minor browser compatibility issues were detected across t
 
 To publish this project live using GitHub Pages
 
-    1. Push your project to a GitHub repository.
-    2. Open the repository on GitHub.
-    3. Go to Settings → Pages.
-    4. Under Source, select: - Branch: `main` - Folder `/root`
-    5. Click Save.
-    6. Wait for GitHub Pages to build the site (usually under 1 minute).
-    7. A live link will appear at the top of the Pages settings page.
+1. Push your project to a GitHub repository.
+2. Open the repository on GitHub.
+3. Go to Settings → Pages.
+4. Under Source, select: - Branch: `main` - Folder `/root`
+5. Click Save.
+6. Wait for GitHub Pages to build the site (usually under 1 minute).
+7. A live link will appear at the top of the Pages settings page.
 
-    Your project is now deployed and publicly accessible
+Your project is now deployed and publicly accessible
 
 ### Forking the Repository
 
 If you want to create your own copy of this project on GitHub:
 
-    1. Go to the repository page.
-    2. Click the Fork button in the top‑right corner.
-    3. GitHub will create a copy under your account.
+1. Go to the repository page.
+2. Click the Fork button in the top‑right corner.
+3. GitHub will create a copy under your account.
 
 ### Cloning the Repository
 
 If you want to download the project to your local machine:
 
-    1. Click the Code button on the repository page.
-    2. Copy the HTTPS or SSH link.
-    3. Run the git clone command in your terminal
+1. Click the Code button on the repository page.
+2. Copy the HTTPS or SSH link.
+3. Run the git clone command in your terminal
 
 ## Credits and Acknowledgements
 
 ### Wireframing
 
-- Wireframes were created using **draw.io**  
+- Wireframes were created using **draw.io**
   https://www.drawio.com/
 
 ### Development Support & Ideation
 
-- **GitHub Copilot** and **ChatGPT** were used throughout development for coding assistance, debugging support, and generating and refining user story ideas.  
-  https://github.com/features/copilot  
+- **GitHub Copilot** and **ChatGPT** were used throughout development for coding assistance, debugging support, and generating and refining user story ideas.
+  https://github.com/features/copilot
   https://chat.openai.com/
 
 ### Version Control
 
-- **GitHub** was used for source control and project version management.  
+- **GitHub** was used for source control and project version management.
   https://github.com/
 
 ### Icons
 
-- Footer icons provided by **Font Awesome**  
+- Footer icons provided by **Font Awesome**
   https://fontawesome.com/
-- Avatar icons sourced from **Flaticon**  
+- Avatar icons sourced from **Flaticon**
   https://www.flaticon.com/free-icons/avatar
 
 ### Frontend Framework & Styling
 
-- **Bootstrap** was used for layout and responsive design  
+- **Bootstrap** was used for layout and responsive design
   https://getbootstrap.com/
 - Custom styling implemented using **HTML** and **CSS**
 
 ### Validation & Testing
 
-- **W3C HTML Validator**  
+- **W3C HTML Validator**
   https://validator.w3.org/
-- **W3C CSS Validator**  
+- **W3C CSS Validator**
   https://jigsaw.w3.org/css-validator/
-  **JS Validator**
-  https://jshint.com/
+- **JS Validator
+  https://jshint.com/**
 
 ### Development Environment
 
-- **Visual Studio Code (VS Code)** used as the primary IDE  
+- **Visual Studio Code (VS Code)** used as the primary IDE
   https://code.visualstudio.com/
 
 ### Performance, Debugging & Responsiveness Tools
 
-- **Google Chrome DevTools**  
+- **Google Chrome DevTools**
   https://developer.chrome.com/docs/devtools/
-- **Lighthouse**  
+- **Lighthouse**
   https://developer.chrome.com/docs/lighthouse/
-- **Am I Responsive** (ui.dev) – used to generate responsive project screenshots  
+- **Am I Responsive** (ui.dev) – used to generate responsive project screenshots
   https://ui.dev/amiresponsive
-- **Browser Compatibility**  
+- **Browser Compatibility**
   https://www.powermapper.com/
 
 ### Typography
 
-- Fonts provided by **Google Fonts**  
+- Fonts provided by **Google Fonts**
   https://fonts.google.com/
 
 ### Project Assets
 
 - All project screenshots and responsive layout images were captured and produced by the project author and collaborators.
+
+### Team Members
+
+* Steffan Eyre
+* Joshua David Bishop
+* Mohammed Hamza Mahmood
+* Leila Csak
+*
